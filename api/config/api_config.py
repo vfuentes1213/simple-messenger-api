@@ -1,0 +1,1 @@
+config = { "BUNDLE_ERRORS": True}
