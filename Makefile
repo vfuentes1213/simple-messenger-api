@@ -12,3 +12,7 @@ build-api:
 run-tests:
 	pytest --cov=app/__test__
 .PHONY: run-tests
+
+format-files:
+	black
+.PHONY: format-files
