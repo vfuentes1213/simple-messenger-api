@@ -1,1 +1,4 @@
 msg-api-venv
+
+# Pytest files
+*.coverage
