@@ -8,3 +8,7 @@ bootstrap-api:
 build-api:
 	pip install -r requirements.txt
 .PHONY: build-api
+
+run-tests:
+	pytest --cov=app/__test__
+.PHONY: run-tests
