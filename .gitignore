@@ -1,4 +1,11 @@
+# python virtual env
 msg-api-venv
 
 # Pytest files
 *.coverage
+
+# VSC specifig
+.vscode
+
+# env files
+.env*
