@@ -1,5 +1,4 @@
 from flask_restful import Resource, reqparse
-from werkzeug.exceptions import InternalServerError
 from api.models.user import UserModel
 
 

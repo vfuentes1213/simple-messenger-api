@@ -1,5 +1,4 @@
 from flask_restful import Resource, reqparse
-from werkzeug.exceptions import InternalServerError
 from api.models.message import MessageModel
 
 
@@ -30,7 +29,7 @@ class MessageList(Resource):
                 # recipient id is required so this should always be safe
                 msgs = MessageModel().find_recent(req_data.recipient_id)
         except:
-            return {"message": "Unable to get messages"}
+            return {"message": "Unable to get messages"}, 500
         return {"payload": [msg.json() for msg in msgs]}
 
 
