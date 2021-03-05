@@ -1,12 +1,15 @@
 import pytest
+from api.models.user import UserModel
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def mock_user_model(mocker):
+    # so that we don't actually save to the db
+    mocker.patch("api.models.user.UserModel.save_to_db")
     mocker.patch(
-        "api.models.user.find_all", return_value=[{"name": "foo"}, {"name": "bar"}]
+        "api.models.user.UserModel.find_all",
+        return_value=[UserModel(name="john smith"), UserModel(name="mary jane")],
     )
-    mocker.patch("api.models.user.save_to_db", return_value={"id": 1, "name": "bar"})
 
 
 class TestUserEndpoints:
@@ -17,15 +20,12 @@ class TestUserEndpoints:
     def test_get_all_users(self, client):
         res = client.get(self.users_endpoint)
         assert res.status_code == 200
-        assert len(res.json["users"]) > 0
-
-    # TODO: maybe do a negate test where something goes wrong on our side and we have to return a 500
+        assert len(res.json["payload"]) > 0
 
     def test_create_new_user(self, client):
         res = client.post(self.user_endpoint, json={"name": "Bob foobar"})
         assert res.status_code == 201
         assert res.json["message"] == "successfully created user"
-        assert res.json["user"]["id"] != None
 
     def test_create_new_user_missing_name(self, client):
         res = client.post(self.user_endpoint, json={})
