@@ -1,26 +1,69 @@
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from werkzeug.exceptions import InternalServerError
+from api.models.message import MessageModel
+
 
 class MessageList(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument(
+        "recipient_id",
+        type=int,
+        required=True,
+        help="Please provide the recipient id.",
+        location="json",
+    )
+    parser.add_argument(
+        "sender_id",
+        type=int,
+        required=False,
+        location="json",
+    )
+
     def get(self):
+        req_data = self.parser.parse_args()
         try:
-            pass
+            if req_data.sender_id:
+                msgs = MessageModel().find_recent_from(
+                    req_data.recipient_id, req_data.sender_id
+                )
+            else:
+                # recipient id is required so this should always be safe
+                msgs = MessageModel().find_recent(req_data.recipient_id)
         except:
-            return InternalServerError()
+            return {"message": "Unable to get messages"}
+        return {"payload": [msg.json() for msg in msgs]}
+
 
 class RecipientMessages(Resource):
-    def get(self, recipient_id):
-        try:
-            # add args and query db based on recipient_id
-            pass
-        except:
-            return InternalServerError()
-        return {"message": "here you go..."}
+    parser = reqparse.RequestParser()
+    parser.add_argument(
+        "sender_id",
+        type=int,
+        required=True,
+        help="Please provide the sender_id.",
+        location="json",
+    )
+    parser.add_argument(
+        "recipient_id",
+        type=int,
+        required=True,
+        help="Please provide the recipient_id.",
+        location="json",
+    )
+    parser.add_argument(
+        "message",
+        type=str,
+        required=True,
+        help="Please provide a message.",
+        location="json",
+    )
 
-    def post(self, recipient_id):
+    def post(self):
+        # make sure all required fields are present
+        msg_data = self.parser.parse_args()
         try:
-            # send message to recipient given some sender id
-            pass
+            msg = MessageModel(**msg_data)
+            msg.save_to_db()
         except:
-            return InternalServerError()
-        return {"message": "here you go..."}
+            return {"message": "Unable to send message "}, 500
+        return {"payload": msg.json()}, 201
