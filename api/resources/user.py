@@ -22,9 +22,9 @@ class User(Resource):
             user.save_to_db()
         except Exception:
             return {"message": "Unable to create user"}, 500
-        return {"message": "successfully created user", "user": user.json()}, 201
+        return {"message": "successfully created user", "payload": user.json()}, 201
 
 
 class UserList(Resource):
     def get(self):
-        return {"users": [user.json() for user in UserModel.find_all()]}
+        return {"payload": [user.json() for user in UserModel.find_all()]}
