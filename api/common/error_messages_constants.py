@@ -1,1 +1,0 @@
-NON_EXISTANT_USER_ERROR_MSG = 'Please provide a valid user id.'
