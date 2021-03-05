@@ -6,8 +6,8 @@ from api.db import db
 
 app = Flask(__name__)
 app.config.update(config)
-# TODO put prefix in config
 api = Api(app, prefix="/api/v1")
+db.init_app(app)
 
 initialize_routes(api)
 
