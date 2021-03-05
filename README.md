@@ -17,4 +17,4 @@ make run-coverage-report
 ```
 
 ### API Documentation
-Published use postman publisher tool that you can find [here](https://documenter.getpostman.com/view/2975083/Tz5jcz2V)
+Documentation can be found [here](https://documenter.getpostman.com/view/2975083/Tz5jcz2V)
